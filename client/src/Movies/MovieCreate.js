@@ -29,7 +29,8 @@ class MovieCreate extends React.Component {
       .post('http://localhost:5000/api/movies', {
         title: this.state.title,
         director: this.state.director,
-        metascore: this.state.metascore
+        metascore: parseInt(this.state.metascore),
+        stars: [ 'Johnny Bravo', 'CatDog', 'Johnny Test']
       })
       .then( () => this.setState({ successMessage: true }) )
       .catch( err => {
