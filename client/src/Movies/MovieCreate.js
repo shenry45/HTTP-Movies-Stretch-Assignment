@@ -10,6 +10,7 @@ class MovieCreate extends React.Component {
     title: '',
     director: '',
     metascore: undefined,
+    stars: [],
     errorMessage: undefined,
     successMessage: false
   }
@@ -25,18 +26,38 @@ class MovieCreate extends React.Component {
   handlerSubmitForm = e => {
     e.preventDefault();
 
+    const getStars = e => {
+      let starsList = [];
+      const starsNode = document.querySelector('div.star-fields');
+
+      console.log(starsNode);
+
+      starsNode.querySelectorAll('input[name="stars"]').forEach(star => {
+        console.log(star)
+        starsList.push(star.value);
+        }
+      )
+
+      return starsList;
+    }
+
     axios
       .post('http://localhost:5000/api/movies', {
         title: this.state.title,
         director: this.state.director,
         metascore: parseInt(this.state.metascore),
-        stars: [ 'Johnny Bravo', 'CatDog', 'Johnny Test']
+        stars: getStars()
       })
       .then( () => this.setState({ successMessage: true }) )
       .catch( err => {
-        console.log(err.response);
         this.setState({ errorMessage: err.response.data });
       })
+  }
+
+  addStarField = () => {
+    const field = '<div class="star-input"><input type="text" name="stars" placeholder="Star name here"/></div>';
+
+    document.querySelector('div.star-fields').insertAdjacentHTML("beforeend", field);
   }
 
   render() {
@@ -63,6 +84,16 @@ class MovieCreate extends React.Component {
           placeholder="Metascore"
           onChange={this.changeHandler}
         ></input>
+        <div className="star-fields">
+          <div className="star-input">
+            <input
+              type="text"
+              name="stars"
+              placeholder="Star name here"
+            />
+            <p className="star-add" onClick={this.addStarField}>+</p>
+          </div>
+        </div>
         <button type="submit" onClick={this.handlerSubmitForm}>Add Movie</button>
         {
           this.state.successMessage && (
@@ -104,6 +135,33 @@ const Form = styled.form`
     color: #000;
     font-weight: bold;
     text-decoration: underline;
+  }
+
+  div.star-fields {
+    display: flex;
+    flex-flow: column nowrap;
+    margin-left: 50px;
+
+    div.star-input {
+      display: flex;
+      flex-flow: row nowrap;
+      
+      p {
+        cursor: pointer;
+        font-size: 2rem;
+        line-height: 1.65rem;
+        background: white;
+        border: 2px solid #000;
+        margin: 0 0 0 10px;
+        padding: 5px;
+        position: relative;
+        top: -5px;
+        height: 25px;
+        width: 25px;
+        text-align: center;
+        border-radius: 50%;
+      }
+    }
   }
 `;
 
