@@ -30,10 +30,7 @@ class MovieCreate extends React.Component {
       let starsList = [];
       const starsNode = document.querySelector('div.star-fields');
 
-      console.log(starsNode);
-
       starsNode.querySelectorAll('input[name="stars"]').forEach(star => {
-        console.log(star)
         starsList.push(star.value);
         }
       )
@@ -45,7 +42,7 @@ class MovieCreate extends React.Component {
       .post('http://localhost:5000/api/movies', {
         title: this.state.title,
         director: this.state.director,
-        metascore: parseInt(this.state.metascore),
+        metascore: parseInt(this.state.metascore, 100),
         stars: getStars()
       })
       .then( () => this.setState({ successMessage: true }) )
